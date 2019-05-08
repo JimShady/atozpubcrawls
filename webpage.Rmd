@@ -1,0 +1,19 @@
+---
+title: "The A to Z Pub Crawl"
+author: "James David Smith"
+date: "08/05/2019"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(kableExtra)
+```
+
+```{r}
+
+data <- read_csv('crawl_data.csv')
+
+
+
+```
