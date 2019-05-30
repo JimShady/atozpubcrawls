@@ -5,18 +5,19 @@ knit: (function(inputFile, encoding) {
   rmarkdown::render(inputFile, encoding = encoding, output_dir = "docs", output_file ="index.html") })
 ---
 
-```{r, include=FALSE}
-library(tidyverse)
-library(kableExtra)
-library(ggmap)
-library(sf)
-library(mapview)
-library(leaflet)
+```{r, include=FALSE, message=FALSE, warning=FALSE}
+#AI
+library(tidyverse, quietly = T)
+library(kableExtra, quietly = T)
+library(ggmap, quietly = T)
+library(sf, quietly = T)
+library(mapview, quietly = T)
+library(leaflet, quietly = T)
 
-register_google('AIzaSyB5FD-aap50rL39a8jjhIG1VL70PmzB30A')
+register_google('zaSyB5FD-aap50rL39a8jjhIG1VL70PmzB30A')
 ```
 
-```{r, echo=F}
+```{r, echo=F, message=FALSE, warning=FALSE}
 
 crawls      <- read_csv('crawls.csv', col_types = cols())
 pubs        <- read_csv('pubs.csv', col_types = cols()) %>% st_as_sf(coords = c('lon', 'lat')) %>% st_set_crs(4326)
@@ -28,7 +29,7 @@ attendances <- read_csv('attendance.csv', col_types = cols())
 
 ## Crawls
 
-```{r, echo=F}
+```{r, echo=F, message=FALSE, warning=FALSE}
 
 kable(crawls) %>%
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
@@ -37,13 +38,13 @@ kable(crawls) %>%
 
 ## Attendance
 
-```{r, echo=F}
+```{r, echo=F, message=FALSE, warning=FALSE}
 
 number_of_crawls <- length(unique(attendances$Letter))
-crawls <- filter(crawls, !is.na(Date))
-crawls$crawl <- 1:nrow(crawls)
+crawls           <- filter(crawls, !is.na(Date))
+crawls$crawl     <- 1:nrow(crawls)
 
-time_attendance <- left_join(attendances, crawls, by = c('Letter' = 'Letter')) %>%
+time_attendance  <- left_join(attendances, crawls, by = c('Letter' = 'Letter')) %>%
                     mutate(Date = as.POSIXct(Date, format = '%Y-%m-%d'))
 
 ggplot(data=time_attendance, aes(Name.y, Name.x, group=Name.x, colour=Name.x)) + 
@@ -56,8 +57,8 @@ ggplot(data=time_attendance, aes(Name.y, Name.x, group=Name.x, colour=Name.x)) +
 
 ## Pubs
 
-```{r, echo=F}
+```{r, echo=F, message=FALSE, warning=FALSE}
 
-mapview(pubs, alpha.regions = 0.4, map.types = 'OpenStreetMap.BlackAndWhite')
+mapview(pubs, alpha.regions = 0.4, map.types = 'Esri.WorldImagery')
 
 ```
