@@ -8,13 +8,56 @@ knit: (function(inputFile, encoding) {
 ```{r, include=FALSE}
 library(tidyverse)
 library(kableExtra)
-library(googlesheets)
+library(ggmap)
+library(sf)
+library(mapview)
+library(leaflet)
+
+register_google('AIzaSyB5FD-aap50rL39a8jjhIG1VL70PmzB30A')
 ```
 
-```{r}
+```{r, echo=F}
 
-#data <- read_csv('crawl_data.csv')
+crawls      <- read_csv('crawls.csv', col_types = cols())
+pubs        <- read_csv('pubs.csv', col_types = cols()) %>% st_as_sf(coords = c('lon', 'lat')) %>% st_set_crs(4326)
+attendances <- read_csv('attendance.csv', col_types = cols())
 
+```
 
+# {.tabset}
+
+## Crawls
+
+```{r, echo=F}
+
+kable(crawls) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+
+```
+
+## Attendance
+
+```{r, echo=F}
+
+number_of_crawls <- length(unique(attendances$Letter))
+crawls <- filter(crawls, !is.na(Date))
+crawls$crawl <- 1:nrow(crawls)
+
+time_attendance <- left_join(attendances, crawls, by = c('Letter' = 'Letter')) %>%
+                    mutate(Date = as.POSIXct(Date, format = '%Y-%m-%d'))
+
+ggplot(data=time_attendance, aes(Name.y, Name.x, group=Name.x, colour=Name.x)) + 
+  geom_point(size=5) + xlab('Crawl') + 
+  ylab('Name') +
+  theme(axis.text.x = element_text(angle=45, hjust=1),
+        legend.title = element_blank())
+
+```
+
+## Pubs
+
+```{r, echo=F}
+
+mapview(pubs, alpha.regions = 0.4, map.types = 'OpenStreetMap.BlackAndWhite')
 
 ```
