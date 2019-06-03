@@ -7,6 +7,8 @@ knit: (function(inputFile, encoding) {
 
 ```{r, include=FALSE, message=FALSE, warning=FALSE}
 #AI
+rm(list=ls())
+
 library(tidyverse, quietly = T)
 library(kableExtra, quietly = T)
 library(ggmap, quietly = T)
@@ -14,15 +16,15 @@ library(sf, quietly = T)
 library(mapview, quietly = T)
 library(leaflet, quietly = T)
 
-register_google('zaSyB5FD-aap50rL39a8jjhIG1VL70PmzB30A')
+register_google('zaSyB5FD-aap50rL39a8jjhIG1VL70PmzB3')
 ```
 
 ```{r, echo=F, message=FALSE, warning=FALSE}
 
 crawls      <- read_csv('crawls.csv', col_types = cols())
-pubs        <- read_csv('pubs.csv', col_types = cols()) %>% st_as_sf(coords = c('lon', 'lat')) %>% st_set_crs(4326)
+pubs        <- read_csv('pubs.csv', col_types = cols()) %>% st_as_sf(coords = c('X', 'Y'), na.fail = F) %>% st_set_crs(4326)
 attendances <- read_csv('attendance.csv', col_types = cols())
-
+#0A
 ```
 
 # {.tabset}
@@ -51,7 +53,7 @@ ggplot(data=time_attendance, aes(Name.y, Name.x, group=Name.x, colour=Name.x)) +
   geom_point(size=5) + xlab('Crawl') + 
   ylab('Name') +
   theme(axis.text.x = element_text(angle=45, hjust=1),
-        legend.title = element_blank())
+        legend.position = 'none')
 
 ```
 
@@ -59,6 +61,21 @@ ggplot(data=time_attendance, aes(Name.y, Name.x, group=Name.x, colour=Name.x)) +
 
 ```{r, echo=F, message=FALSE, warning=FALSE}
 
-mapview(pubs, alpha.regions = 0.4, map.types = 'Esri.WorldImagery')
+for (i in 1:nrow(pubs)) {
+    if(is.na(st_dimension(pubs[i, 'geometry']))) {
+      
+      pubs[i,'geometry'] <- geocode(as_tibble(pubs)$Postcode[i]) %>% st_as_sf(coords = c('lon', 'lat'))
+      print('doing geocode')
+      
+    }    
+}
+
+st_write(pubs, "pubs.csv", layer_options = "GEOMETRY=AS_XY", delete_dsn = T, delete_layer=TRUE, quiet = T) 
+
+leaflet() %>% 
+  addProviderTiles(providers$Hydda.Full) %>%
+  addFeatures(pubs, weight = 1, fillColor = "red", color = NA,
+              opacity = 1, fillOpacity = 0.6, clusterOptions = markerClusterOptions(),
+              label = ~as.character(Pub))
 
 ```
