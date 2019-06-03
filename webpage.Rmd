@@ -21,7 +21,7 @@ register_google('zaSyB5FD-aap50rL39a8jjhIG1VL70PmzB3')
 
 ```{r, echo=F, message=FALSE, warning=FALSE}
 
-crawls      <- read_csv('crawls.csv', col_types = cols())
+crawls      <- read_csv('crawls.csv', col_types = cols()) %>% mutate(Date = as.Date(Date, format = '%d/%m/%Y'))
 pubs        <- read_csv('pubs.csv', col_types = cols()) %>% st_as_sf(coords = c('X', 'Y'), na.fail = F) %>% st_set_crs(4326)
 attendances <- read_csv('attendance.csv', col_types = cols())
 #0A
@@ -42,10 +42,6 @@ kable(crawls) %>%
 
 ```{r, echo=F, message=FALSE, warning=FALSE}
 
-number_of_crawls <- length(unique(attendances$Letter))
-crawls           <- filter(crawls, !is.na(Date))
-crawls$crawl     <- 1:nrow(crawls)
-
 time_attendance  <- left_join(attendances, crawls, by = c('Letter' = 'Letter')) %>%
                     mutate(Date = as.POSIXct(Date, format = '%Y-%m-%d'))
 
@@ -53,7 +49,9 @@ ggplot(data=time_attendance, aes(Name.y, Name.x, group=Name.x, colour=Name.x)) +
   geom_point(size=5) + xlab('Crawl') + 
   ylab('Name') +
   theme(axis.text.x = element_text(angle=45, hjust=1),
-        legend.position = 'none')
+        legend.position = 'none') +
+  theme(axis.line = element_line(colour='black'),
+        axis.text = element_text(colour = 'black'))
 
 ```
 
@@ -77,5 +75,39 @@ leaflet() %>%
   addFeatures(pubs, weight = 1, fillColor = "red", color = NA,
               opacity = 1, fillOpacity = 0.6, clusterOptions = markerClusterOptions(),
               label = ~as.character(Pub))
+
+```
+
+## Progress
+
+```{r, echo=F, message=FALSE, warning=FALSE}
+
+days_per_crawl   <- as.numeric(max(crawls$Date, na.rm=T) - min(crawls$Date, na.rm=T), units='days') / nrow(filter(crawls, !is.na(Date)))
+
+time_remaining   <- nrow(filter(crawls, is.na(Date))) * days_per_crawl
+
+predicted_finish <- tibble(Date = max(crawls$Date, na.rm=T) + time_remaining,
+                           Completion = 27,
+                           Name =  max(crawls$Date, na.rm=T) + time_remaining)
+
+crawls$Completion <- NA
+b <- 1
+
+crawls <- arrange(crawls, Date)
+
+for (i in 1:nrow(crawls)) { if (!is.na(crawls[i,'Date'])) {crawls[i,'Completion'] <- b; b <- b+1}}
+
+ggplot(crawls, aes(Date, Completion, label = Name)) + 
+  geom_line() + 
+  geom_point() +
+  geom_text(check_overlap = TRUE,hjust = 0,nudge_x = 30, nudge_y = -0.2) +
+  geom_point(data = predicted_finish, colour = 'red') +
+  geom_text(data = predicted_finish,check_overlap = TRUE,hjust = 1,nudge_x = -50, colour='red') +
+  xlab('Date') +
+  ylab('Crawls completed (out of 27)') +
+  annotate("segment", x = min(crawls$Date, na.rm=T), xend = predicted_finish$Date, y = 0, yend = 27, colour = "red", linetype=2) +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  theme(axis.line = element_line(colour='black'),
+        axis.text = element_text(colour = 'black'))
 
 ```
