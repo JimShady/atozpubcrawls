@@ -4,6 +4,7 @@ In 2013 a group of my friends decided to attempt every pub crawls on the [London
 
 https://jimshady.github.io/atozpubcrawls/
 
+Our current predicted end date is `*1 October 2022*`
+
 ![Crawl website image](crawlwebpage.png)
 
-Our current predicted end date is `*1 October 2022*`
