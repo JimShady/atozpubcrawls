@@ -15,8 +15,8 @@ library(ggmap, quietly = T)
 library(sf, quietly = T)
 library(mapview, quietly = T)
 library(leaflet, quietly = T)
+library(tmap, quietly = T)
 
-register_google('zaSyB5FD-aap50rL39a8jjhIG1VL70PmzB3')
 ```
 
 ```{r, echo=F, message=FALSE, warning=FALSE}
@@ -24,7 +24,6 @@ register_google('zaSyB5FD-aap50rL39a8jjhIG1VL70PmzB3')
 crawls      <- read_csv('crawls.csv', col_types = cols()) %>% mutate(Date = as.Date(Date, format = '%d/%m/%Y'))
 pubs        <- read_csv('pubs.csv', col_types = cols()) %>% st_as_sf(coords = c('X', 'Y'), na.fail = F) %>% st_set_crs(4326)
 attendances <- read_csv('attendance.csv', col_types = cols())
-#0A
 ```
 
 # {.tabset}
@@ -70,11 +69,10 @@ for (i in 1:nrow(pubs)) {
 
 st_write(pubs, "pubs.csv", layer_options = "GEOMETRY=AS_XY", delete_dsn = T, delete_layer=TRUE, quiet = T) 
 
-leaflet() %>% 
-  addProviderTiles(providers$Hydda.Full) %>%
-  addFeatures(pubs, weight = 1, fillColor = "red", color = NA,
-              opacity = 1, fillOpacity = 0.6, clusterOptions = markerClusterOptions(),
-              label = ~as.character(Pub))
+suppressMessages(tmap_mode('view'))
+
+tm_shape(pubs) +
+  tm_markers()
 
 ```
 
@@ -90,12 +88,15 @@ predicted_finish <- tibble(Date = max(crawls$Date, na.rm=T) + time_remaining,
                            Completion = 27,
                            Name =  max(crawls$Date, na.rm=T) + time_remaining)
 
-crawls$Completion <- NA
+crawls$Completion <- as.integer(NA)
 b <- 1
 
 crawls <- arrange(crawls, Date)
 
-for (i in 1:nrow(crawls)) { if (!is.na(crawls[i,'Date'])) {crawls[i,'Completion'] <- b; b <- b+1}}
+for (i in 1:nrow(crawls)) { 
+  if (!is.na(crawls[i,'Date'])) {crawls[i,'Completion'] <- b; 
+  b <- b+1
+  }}
 
 ggplot(crawls, aes(Date, Completion, label = Name)) + 
   geom_line() + 
