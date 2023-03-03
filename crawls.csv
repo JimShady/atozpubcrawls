@@ -1,27 +1,27 @@
-Letter,Name,Date
-A,Angel,
-B,Brixton,10/02/2013
-C,City of London,01/06/2019
-D,Dalston,02/10/2015
-E,Euston,06/02/2015
-F,Farringdon & Clerkenwell,03/08/2013
-G,Greenwich,19/04/2013
-H,Hampstead & Highgate,31/10/2014
-I,Isle of Dogs,22/05/2015
-J,St James's & Mayfair,25/04/2014
-K,Kennington & Oval,18/05/2018
-L,Limehouse & Wapping,07/06/2013
-M,Marylebone,16/08/2013
-N,Notting Hill,11/04/2014
-O,Old Street,
-P,Peckham & Camberwell,04/10/2013
-Q,Queen's Park & Kilburn,23/02/2018
-R,Richmond,
-S,Stoke Newington,21/09/2018
-T,The Thames,
-U,Unusual,
-V,Victoria & Pimlico,
-W,Wandsworth,11/03/2016
-X,Cross-Rail,
-Y,Ye Olde,
-Z,Zone one,27/07/2021
+Letter,Name,Date,Londonist
+A,Angel,29/11/2022,
+B,Brixton,10/02/2013,
+C,City of London,01/06/2019,
+D,Dalston,02/10/2015,
+E,Euston,06/02/2015,
+F,Farringdon & Clerkenwell,03/08/2013,
+G,Greenwich,19/04/2013,
+H,Hampstead & Highgate,31/10/2014,
+I,Isle of Dogs,22/05/2015,
+J,St James's & Mayfair,25/04/2014,
+K,Kennington & Oval,18/05/2018,
+L,Limehouse & Wapping,07/06/2013,
+M,Marylebone,16/08/2013,
+N,Notting Hill,11/04/2014,
+O,Old Street,,https://londonist.com/2013/06/whats-the-best-pub-in-old-street-the-results
+P,Peckham & Camberwell,04/10/2013,
+Q,Queen's Park & Kilburn,23/02/2018,
+R,Richmond,,https://londonist.com/2013/09/whats-the-best-pub-in-richmond-the-results
+S,Stoke Newington,21/09/2018,
+T,The Thames,,https://londonist.com/2013/11/the-best-pubs-on-the-river-thames
+U,Unusual,,https://londonist.com/london/drink/most-unusual-pubs-london
+V,Victoria & Pimlico,,https://londonist.com/2014/01/whats-the-best-pubs-in-victoria
+W,Wandsworth,11/03/2016,
+X,Cross-Rail,,https://londonist.com/2014/02/the-first-ever-crossrail-pub-crawl
+Y,Ye Olde,,https://londonist.com/2014/04/a-pub-crawl-of-old-london-pubs
+Z,Zone one,27/07/2021,
