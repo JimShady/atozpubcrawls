@@ -26,7 +26,7 @@ pubs        <- read_csv('pubs.csv', col_types = cols()) %>% st_as_sf(coords = c(
 attendances <- read_csv('attendance.csv', col_types = cols())
 ```
 
-# {.tabset}
+#  {.tabset}
 
 ## Crawls
 
@@ -71,8 +71,9 @@ st_write(pubs, "pubs.csv", layer_options = "GEOMETRY=AS_XY", delete_dsn = T, del
 
 suppressMessages(tmap_mode('view'))
 
+tm_basemap("OpenStreetMap.Mapnik") +
 tm_shape(pubs) +
-  tm_markers()
+  tm_dots()
 
 ```
 
